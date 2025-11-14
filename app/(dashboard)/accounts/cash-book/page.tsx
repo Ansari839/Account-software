@@ -1,4 +1,4 @@
-import { BaseLayout } from "@/components/layout/BaseLayout";
+import BaseLayout from "@/components/layout/BaseLayout";
 import { CashBookTable } from "./components/table";
 
 export default function CashBookPage() {

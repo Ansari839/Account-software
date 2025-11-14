@@ -1,4 +1,4 @@
-import { BaseLayout } from "@/components/layout/BaseLayout";
+import BaseLayout from "@/components/layout/BaseLayout";
 import { TrialBalanceTable } from "./components/table";
 
 export default function TrialBalancePage() {

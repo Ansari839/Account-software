@@ -1,4 +1,4 @@
-import { BaseLayout } from "@/components/layout/BaseLayout";
+import BaseLayout from "@/components/layout/BaseLayout";
 import { DeliveryStatusTable } from "./components/table";
 
 export default function DeliveryStatusPage() {

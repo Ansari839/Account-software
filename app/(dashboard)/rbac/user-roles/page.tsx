@@ -1,4 +1,4 @@
-import { BaseLayout } from "@/components/layout/BaseLayout";
+import BaseLayout from "@/components/layout/BaseLayout";
 import { UserRolesTable } from "./components/table";
 
 export default function UserRolesPage() {

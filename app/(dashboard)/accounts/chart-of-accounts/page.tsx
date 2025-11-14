@@ -1,4 +1,4 @@
-import { BaseLayout } from "@/components/layout/BaseLayout";
+import BaseLayout from "@/components/layout/BaseLayout";
 import { ChartOfAccountsTable } from "./components/table";
 
 export default function ChartOfAccountsPage() {

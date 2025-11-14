@@ -25,8 +25,6 @@ interface Company {
 import BaseLayout from '@/components/layout/BaseLayout';
 
 export default function CompanyPage() {
-  return (
-    <BaseLayout>
   const [companies, setCompanies] = useState<Company[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
@@ -38,6 +36,9 @@ export default function CompanyPage() {
     email: '',
     website: '',
   });
+
+  return (
+    <BaseLayout>
   const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
 

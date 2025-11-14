@@ -1,4 +1,4 @@
-import { BaseLayout } from "@/components/layout/BaseLayout";
+import BaseLayout from "@/components/layout/BaseLayout";
 import { DispatchEntryTable } from "./components/table";
 
 export default function DispatchEntryPage() {

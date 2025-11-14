@@ -22,8 +22,6 @@ interface Role {
 import BaseLayout from '@/components/layout/BaseLayout';
 
 export default function RolePage() {
-  return (
-    <BaseLayout>
   const [roles, setRoles] = useState<Role[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingRole, setEditingRole] = useState<Role | null>(null);
@@ -34,6 +32,9 @@ export default function RolePage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
+
+  return (
+    <BaseLayout>
 
   // Load roles from the database
   useEffect(() => {

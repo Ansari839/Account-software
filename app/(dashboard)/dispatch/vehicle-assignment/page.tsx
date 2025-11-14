@@ -1,4 +1,4 @@
-import { BaseLayout } from "@/components/layout/BaseLayout";
+import BaseLayout from "@/components/layout/BaseLayout";
 import { VehicleAssignmentTable } from "./components/table";
 
 export default function VehicleAssignmentPage() {

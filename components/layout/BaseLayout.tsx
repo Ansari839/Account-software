@@ -26,13 +26,33 @@ const navItems: NavItem[] = [
     icon: <DollarSign className="h-4 w-4" />,
     items: [
       { title: 'Sales Order', href: '/sales/orders' },
+      { title: 'Sales Quote', href: '/sales/quotes' },
+      { title: 'Sales Invoice', href: '/sales/invoices' },
+      { title: 'Sales Payment', href: '/sales/payments' },
       { title: 'Sales Return', href: '/sales/order-return' },
       { title: 'Delivery Challan', href: '/sales/delivery-challan' },
       { title: 'Customer Ledger', href: '/sales/customer-ledger' },
     ]
   },
-  { title: 'Purchase', href: '/purchase', icon: <ShoppingCart className="h-4 w-4" /> },
-  { title: 'Inventory', href: '/inventory', icon: <Package className="h-4 w-4" /> },
+  {
+    title: 'Purchase',
+    icon: <ShoppingCart className="h-4 w-4" />,
+    items: [
+      { title: 'Purchase Orders', href: '/purchase/orders' },
+      { title: 'Purchase Invoice', href: '/purchase/invoice' },
+      { title: 'Purchase Receipt', href: '/purchase/receipt' },
+      { title: 'Purchase Return', href: '/purchase/return' },
+    ]
+  },
+  {
+    title: 'Inventory',
+    icon: <Package className="h-4 w-4" />,
+    items: [
+      { title: 'Warehouses', href: '/inventory/warehouses' },
+      { title: 'Inventory Adjustment', href: '/inventory/adjustment' },
+      { title: 'Inventory Transfer', href: '/inventory/transfer' },
+    ]
+  },
   {
   title: 'Accounts',
   icon: <FileText className="h-4 w-4" />,
@@ -57,7 +77,28 @@ const navItems: NavItem[] = [
     { title: 'Delivery Status', href: '/dispatch/delivery-status' },
   ]
 },
-  { title: 'Reports', href: '/reports', icon: <BarChart3 className="h-4 w-4" /> },
+  {
+    title: 'Reports',
+    icon: <BarChart3 className="h-4 w-4" />,
+    items: [
+      { title: 'Sales Reports', href: '/reports/sales-reports' },
+      { title: 'Purchase Reports', href: '/reports/purchase-reports' },
+      { title: 'Inventory Reports', href: '/reports/inventory-reports' },
+      { title: 'Finance Reports', href: '/reports/finance-reports' },
+      { title: 'Custom Reports', href: '/reports/custom-reports' },
+    ]
+  },
+  {
+    title: 'System Utilities',
+    icon: <Settings className="h-4 w-4" />,
+    items: [
+      { title: 'Audit Log', href: '/system/audit-log' },
+      { title: 'Backup & Restore', href: '/system/backup-restore' },
+      { title: 'Import / Export', href: '/system/import-export' },
+      { title: 'Activity Monitor', href: '/system/activity-monitor' },
+      { title: 'App Settings', href: '/system/app-settings' },
+    ]
+  },
   {
     title: 'RBAC',
     icon: <Users className="h-4 w-4" />,
@@ -66,6 +107,20 @@ const navItems: NavItem[] = [
       { title: 'Permissions', href: '/rbac/permissions' },
       { title: 'Role-Permissions', href: '/rbac/role-permissions' },
       { title: 'User-Roles', href: '/rbac/user-roles' },
+    ]
+  },
+  {
+    title: 'Master Data',
+    icon: <Package2 className="h-4 w-4" />,
+    items: [
+      { title: 'Company', href: '/dashboard/company' },
+      { title: 'Department', href: '/dashboard/department' },
+      { title: 'Role', href: '/dashboard/role' },
+      { title: 'Employee', href: '/dashboard/employee' },
+      { title: 'Customers', href: '/dashboard/customers' },
+      { title: 'Suppliers', href: '/dashboard/suppliers' },
+      { title: 'Items', href: '/dashboard/items' },
+      { title: 'Units', href: '/dashboard/units' },
     ]
   },
   { title: 'Settings', href: '/settings', icon: <Settings className="h-4 w-4" /> },

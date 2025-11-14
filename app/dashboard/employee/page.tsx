@@ -47,8 +47,6 @@ interface Employee {
 import BaseLayout from '@/components/layout/BaseLayout';
 
 export default function EmployeePage() {
-  return (
-    <BaseLayout>
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -69,6 +67,9 @@ export default function EmployeePage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
+
+  return (
+    <BaseLayout>
 
   // Load employees and related data from the database
   useEffect(() => {

@@ -29,8 +29,6 @@ interface Department {
 import BaseLayout from '@/components/layout/BaseLayout';
 
 export default function DepartmentPage() {
-  return (
-    <BaseLayout>
   const [departments, setDepartments] = useState<Department[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -42,6 +40,9 @@ export default function DepartmentPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
+
+  return (
+    <BaseLayout>
 
   // Load departments and companies from the database
   useEffect(() => {
