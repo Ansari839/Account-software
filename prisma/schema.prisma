@@ -13,3 +13,283 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Company {
+  id           String        @id @default(cuid())
+  name         String
+  description  String?
+  address      String?
+  phone        String?
+  email        String?
+  website      String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  departments  Department[]
+  employees    Employee[]
+  customers    Customer[]
+  suppliers    Supplier[]
+  products     Product[]
+  salesOrders  SalesOrder[]
+  salesReturns SalesReturn[]
+  purchaseOrders PurchaseOrder[]
+  goodsReceipts GoodsReceipt[]
+  customerLedgers CustomerLedger[]
+  supplierLedgers SupplierLedger[]
+}
+
+model Department {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  employees   Employee[]
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  permissions String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  employees   Employee[]
+}
+
+model Employee {
+  id           String   @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String   @unique
+  phone        String?
+  address      String?
+  hireDate     DateTime
+  salary       Decimal?
+  companyId    String
+  departmentId String
+  roleId       String
+  company      Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  department   Department  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  role         Role        @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  salesOrders  SalesOrder[] @relation("SalesOrdersCreatedBy")
+  salesReturns SalesReturn[] @relation("SalesReturnsCreatedBy")
+  purchaseOrders PurchaseOrder[] @relation("PurchaseOrdersCreatedBy")
+  goodsReceipts GoodsReceipt[] @relation("GoodsReceiptsCreatedBy")
+}
+
+model Customer {
+  id            String        @id @default(cuid())
+  name          String
+  email         String        @unique
+  phone         String?
+  address       String?
+  companyId     String
+  company       Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  salesOrders   SalesOrder[]
+  salesReturns  SalesReturn[]
+  customerLedgers CustomerLedger[]
+}
+
+model Supplier {
+  id          String      @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  address     String?
+  companyId   String
+  company     Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  purchaseOrders PurchaseOrder[]
+  goodsReceipts GoodsReceipt[]
+  supplierLedgers SupplierLedger[]
+}
+
+model Product {
+  id                   String            @id @default(cuid())
+  name                 String
+  description          String?
+  sku                  String            @unique
+  price                Decimal           // Sales price
+  cost                 Decimal?          // Purchase cost
+  stock                Int               @default(0)
+  companyId            String
+  company              Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  orderItems           OrderItem[]
+  returnItems          ReturnItem[]
+  purchaseOrderItems   PurchaseOrderItem[]
+  goodsReceiptItems    GoodsReceiptItem[]
+}
+
+model SalesOrder {
+  id            String        @id @default(cuid())
+  orderNumber   String        @unique
+  date          DateTime      @default(now())
+  status        String        @default("pending") // pending, confirmed, shipped, delivered, cancelled
+  customerId    String
+  customer      Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  companyId     String
+  company       Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  salesPersonId String
+  salesPerson   Employee      @relation("SalesOrdersCreatedBy", fields: [salesPersonId], references: [id], onDelete: Cascade)
+  orderItems    OrderItem[]
+  totalAmount   Decimal       @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  salesReturns  SalesReturn[] // For linking sales returns to this order
+}
+
+model OrderItem {
+  id          String     @id @default(cuid())
+  productId   String
+  product     Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity    Int
+  unitPrice   Decimal
+  total       Decimal    @default(0)
+  salesOrderId String
+  salesOrder  SalesOrder @relation(fields: [salesOrderId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model SalesReturn {
+  id              String        @id @default(cuid())
+  returnNumber    String        @unique
+  date            DateTime      @default(now())
+  reason          String?
+  status          String        @default("pending") // pending, approved, processed
+  salesOrderId    String?
+  salesOrder      SalesOrder?   @relation(fields: [salesOrderId], references: [id], onDelete: SetNull)
+  customerId      String
+  customer        Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  companyId       String
+  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdBy       String
+  creator         Employee      @relation("SalesReturnsCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
+  returnItems     ReturnItem[]
+  totalAmount     Decimal       @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model ReturnItem {
+  id            String      @id @default(cuid())
+  productId     String
+  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity      Int
+  unitPrice     Decimal
+  total         Decimal     @default(0)
+  salesReturnId String
+  salesReturn   SalesReturn @relation(fields: [salesReturnId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model PurchaseOrder {
+  id            String             @id @default(cuid())
+  orderNumber   String             @unique
+  date          DateTime           @default(now())
+  status        String             @default("pending") // pending, confirmed, partially_received, received, cancelled
+  supplierId    String
+  supplier      Supplier           @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  companyId     String
+  company       Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  purchasePersonId String
+  purchasePerson Employee           @relation("PurchaseOrdersCreatedBy", fields: [purchasePersonId], references: [id], onDelete: Cascade)
+  orderItems    PurchaseOrderItem[]
+  totalAmount   Decimal            @default(0)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  goodsReceipts GoodsReceipt[]
+}
+
+model PurchaseOrderItem {
+  id            String         @id @default(cuid())
+  productId     String
+  product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity      Int
+  unitPrice     Decimal
+  total         Decimal        @default(0)
+  purchaseOrderId String
+  purchaseOrder PurchaseOrder  @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  receivedQty   Int            @default(0) // Quantity received against this item
+  goodsReceiptItems GoodsReceiptItem[] // For linking goods receipt items to this purchase order item
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model GoodsReceipt {
+  id            String             @id @default(cuid())
+  grnNumber     String             @unique
+  date          DateTime           @default(now())
+  status        String             @default("pending") // pending, confirmed, approved
+  purchaseOrderId String
+  purchaseOrder PurchaseOrder      @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  supplierId    String
+  supplier      Supplier           @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  companyId     String
+  company       Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  receivedById  String
+  receiver      Employee           @relation("GoodsReceiptsCreatedBy", fields: [receivedById], references: [id], onDelete: Cascade)
+  items         GoodsReceiptItem[]
+  totalAmount   Decimal            @default(0)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+}
+
+model GoodsReceiptItem {
+  id            String         @id @default(cuid())
+  productId     String
+  product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity      Int
+  unitPrice     Decimal
+  total         Decimal        @default(0)
+  goodsReceiptId String
+  goodsReceipt  GoodsReceipt   @relation(fields: [goodsReceiptId], references: [id], onDelete: Cascade)
+  purchaseOrderItemId String
+  purchaseOrderItem PurchaseOrderItem @relation(fields: [purchaseOrderItemId], references: [id], onDelete: Cascade)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model CustomerLedger {
+  id            String      @id @default(cuid())
+  customerId    String
+  customer      Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  transactionType String    // sales_order, sales_return, payment, etc.
+  referenceId   String      // ID of the related transaction
+  description   String?
+  debit         Decimal     @default(0)
+  credit        Decimal     @default(0)
+  balance       Decimal     @default(0)
+  date          DateTime    @default(now())
+  companyId     String
+  company       Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model SupplierLedger {
+  id            String      @id @default(cuid())
+  supplierId    String
+  supplier      Supplier    @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  transactionType String    // purchase_order, goods_receipt, payment, etc.
+  referenceId   String      // ID of the related transaction
+  description   String?
+  debit         Decimal     @default(0)  // Amount the company owes to supplier
+  credit        Decimal     @default(0)  // Amount supplier owes to company (returns, credits)
+  balance       Decimal     @default(0)  // Running balance
+  date          DateTime    @default(now())
+  companyId     String
+  company       Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
